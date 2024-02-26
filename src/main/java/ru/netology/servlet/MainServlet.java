@@ -10,7 +10,9 @@ import javax.servlet.http.HttpServletResponse;
 
 public class MainServlet extends HttpServlet {
   private PostController controller;
-
+  public static final String API_POSTS = "/api/posts";
+  public static final String API_POSTS_D = "/api/posts/\\d+";
+  public static final String SLASH = "/";
   @Override
   public void init() {
     final var repository = new PostRepository();
@@ -25,23 +27,23 @@ public class MainServlet extends HttpServlet {
       final var path = req.getRequestURI();
       final var method = req.getMethod();
       // primitive routing
-      if (method.equals("GET") && path.equals("/api/posts")) {
+      if (method.equals("GET") && path.equals(API_POSTS)) {
         controller.all(resp);
         return;
       }
-      if (method.equals("GET") && path.matches("/api/posts/\\d+")) {
+      if (method.equals("GET") && path.matches(API_POSTS_D)) {
         // easy way
-        final var id = Long.parseLong(path.substring(path.lastIndexOf("/")));
+        final var id = Long.parseLong(path.substring(path.lastIndexOf(SLASH)));
         controller.getById(id, resp);
         return;
       }
-      if (method.equals("POST") && path.equals("/api/posts")) {
+      if (method.equals("POST") && path.equals(API_POSTS)) {
         controller.save(req.getReader(), resp);
         return;
       }
-      if (method.equals("DELETE") && path.matches("/api/posts/\\d+")) {
+      if (method.equals("DELETE") && path.matches(API_POSTS_D)) {
         // easy way
-        final var id = Long.parseLong(path.substring(path.lastIndexOf("/")));
+        final var id = Long.parseLong(path.substring(path.lastIndexOf(SLASH)));
         controller.removeById(id, resp);
         return;
       }
